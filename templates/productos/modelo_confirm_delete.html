@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+	{% block content %}
+	{% block head_title %}| Eliminar a {{ object.modelo_perfil }} de {{ object.material }}{% endblock %}
+	{% url 'productos:list_perfil' as lista_perfil %}
+	<!-- START PAGE CONTENT -->
+	<div class="content">
+	  <!-- START JUMBOTRON -->
+	  <div class="jumbotron" data-pages="parallax">
+	    <div class=" container-fluid container-fixed-lg sm-p-l-0 sm-p-r-0">
+	      <div class="inner">
+	        <!-- START BREADCRUMB -->
+	         <ol class="breadcrumb">
+						 <li class="breadcrumb-item"><a href="#">Perfil</a></li>
+ 						<li class="breadcrumb-item"><a href="{{lista_perfil}}">Lista de Perfiles</a></li>
+ 	          <li class="breadcrumb-item active">Eliminar a {{ object.modelo_perfil }} de {{object.material}}</li>
+	        </ol>
+	        <!-- END BREADCRUMB -->
+	      </div>
+	    </div>
+	  </div>
+	  <!-- END JUMBOTRON -->
+	  <!-- START CONTAINER FLUID -->
+	  <div class="container-fluid container-fixed-lg">
+	    <!-- BEGIN PlACE PAGE CONTENT HERE -->
+	<section class="section">
+	  <div class="container">
+	    <div class="row separatedv">
+				<h5>¿Estás seguro que deseas <strong>Eliminar</strong> "{{ object.modelo_perfil }} de {{object.material}}"?</h5>
+				<p class="slidein"> <strong>{{ object.modelo_perfil }} de {{object.material}}</strong> </p>
+<form method="post">{% csrf_token %}
+		<input type="submit" value="Confirmar" class="btn btn-info" />
+
+</form>
+<div class="text-center" style="width:100%; height:50px; justify-content:space-around;">
+	<p class="animation2">Esta acción <strong>no se puede deshacer.</strong> </p>
+</div>
+</div>
+</div>
+</section>
+<!-- END PLACE PAGE CONTENT HERE -->
+</div>
+<!-- END CONTAINER FLUID -->
+</div>
+<!-- END PAGE CONTENT -->
+
+	{% endblock %}

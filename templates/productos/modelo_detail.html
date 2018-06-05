@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+	{% block head_title %}| Detalle de {{ object.modelo_perfil }} de {{ object.material }}{% endblock %}
+	{% block content %}
+  {% url 'productos:list_modelo' as lista_modelo %}
+	<!-- START PAGE CONTENT -->
+	<div class="content">
+	  <!-- START JUMBOTRON -->
+	  <div class="jumbotron" data-pages="parallax">
+	    <div class=" container-fluid container-fixed-lg sm-p-l-0 sm-p-r-0">
+	      <div class="inner">
+	        <!-- START BREADCRUMB -->
+	         <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a href="#">Modelos</a>
+             <li class="breadcrumb-item"><a href="{{lista_modelo}}">Lista de Modelos</a>
+             <li class="breadcrumb-item active">Detalle de {{ object.descripcion }} de {{ object.perfil }}</li>
+	        </ol>
+	        <!-- END BREADCRUMB -->
+	      </div>
+	    </div>
+	  </div>
+	  <!-- END JUMBOTRON -->
+	  <!-- START CONTAINER FLUID -->
+	  <div class="container-fluid container-fixed-lg">
+	    <!-- BEGIN PlACE PAGE CONTENT HERE -->
+	<section class="section">
+		<div class="container">
+			<div class="row separatedv">
+				<div class="col-lg-6">
+					{% if object.imagen %}<img src="{{ object.imagen.url }}" />{% endif %}
+				</div>
+				<div class="col-lg-6">
+					<h1>Detalle</h1>
+					<p>ID: <strong>{{ object.id }}</strong></p>
+					<p>Nombre: <strong>{{ object.nombre }}</strong></p>
+					<p>Descripción: <strong>{{ object.descripcion }}</strong> </p>
+					<p>Perfil: <strong>{{ object.perfil }}</strong></p>
+					<p>¿Activo?:
+						{% if object.activo == True %}
+							<i style="color:#10cfbd;" class="fas fa-check"></i>
+						{%else%}
+							<i style="color:#cf0f0f;" class="fas fa-times"></i>
+						{%endif%}
+					</p>
+					<div class="col-lg-6">
+						<br>
+						{% if user.is_staff %}
+						<a href="{% url "productos:edit_modelo" object.id %}">
+							<button type="submit" class="btn btn-warning btn-block" style="color:black;"><i class="fas fa-pencil-alt" ></i> Editar</button>
+						</a>
+						<a href="{{lista_modelo}}">
+							<button type="submit" class="btn btn-primary btn-block"><i class="fas fa-caret-left"></i> <i class="fas fa-caret-left"></i> <i class="fas fa-caret-left"></i> Regresar</button>
+						</a>
+						{%else%}
+						{%endif%}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<!-- END PLACE PAGE CONTENT HERE -->
+</div>
+<!-- END CONTAINER FLUID -->
+</div>
+<!-- END PAGE CONTENT -->
+<script type="text/javascript">
+  $("#money").maskMoney({ formatOnBlur: true, reverse: true, prefix: '$' });
+</script>
+
+
+{% endblock %}

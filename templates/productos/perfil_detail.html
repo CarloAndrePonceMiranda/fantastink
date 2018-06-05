@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+	{% block head_title %}| Detalle de {{ perfil.perfil }} de {{ perfil.material }}{% endblock %}
+	{% block content %}
+	{% url 'productos:lista' as lista %}
+  {% url 'productos:list_perfil' as lista_perfil %}
+	{% url 'productos:modelo' as modelo %}
+	<!-- START PAGE CONTENT -->
+	<div class="content">
+	  <!-- START JUMBOTRON -->
+	  <div class="jumbotron" data-pages="parallax">
+	    <div class=" container-fluid container-fixed-lg sm-p-l-0 sm-p-r-0">
+	      <div class="inner">
+	        <!-- START BREADCRUMB -->
+	         <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a href="#">Perfil</a>
+             <li class="breadcrumb-item"><a href="{{lista_perfil}}">Lista de Perfiles</a>
+             <li class="breadcrumb-item active">Detalle de Perfil {{ perfil.perfil }} de {{ perfil.material }}
+	        </ol>
+	        <!-- END BREADCRUMB -->
+	      </div>
+	    </div>
+	  </div>
+	  <!-- END JUMBOTRON -->
+	  <!-- START CONTAINER FLUID -->
+	  <div class="container-fluid container-fixed-lg">
+	    <!-- BEGIN PlACE PAGE CONTENT HERE -->
+	<section class="section">
+		<div class="container">
+			<div class="row separatedv">
+				<div class="col-lg-12">
+					<div class="row">
+						<div class="col-lg-12">
+							<h1>{{ perfil.material }}<sup><span class="badge">{{ perfil.perfil }}</span></sup></h1>
+							{% if perfil.imagen %}<img src="{{ perfil.imagen.url }}" />{% endif %}
+						</div>
+						<div class="col-lg-6">
+							<p>Perfil: <strong>{{ perfil.perfil }}</strong></p>
+	            <p>Nombre: <strong>{{ perfil.nombre }}</strong></p>
+							<p>Descripcion: <strong>{{ perfil.descripcion }}</strong></p>
+							<p>Activo: <strong>{% if perfil.activo == True %}Si{% else %}No{% endif %}</strong></p>
+						</div>
+						<div class="col-lg-6">
+	            <p>Metraje: <strong>{{ perfil.metraje }}</strong> metros</p>
+	            <p>Desperdicio: <strong>{{ perfil.desperdicio }}</strong> centimetros</p>
+	            <p>Precio: <strong>${{ perfil.precio }}</strong></p>
+	            <p>Material: <strong>{{ perfil.material }}</strong></p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3">
+					<br>
+					<a href="{% url "productos:edit_perfil" perfil.id %}">
+						<button type="submit" class="btn btn-info">Editar</button>
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<a class="" href="{{modelo}}">
+            <button type="button" name="button" class="btn btn-success">
+              <i class="fas fa-plus"></i> Modelo
+            </button>
+          </a>
+				</div>
+				<div class="col-md-12">
+					<table class="table table-dark table-hover">
+            <tr>
+              <thead>
+                <th class="text-center">¿Activo?</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Imagen</th>
+                <th class="text-center">Perfil</th>
+                {% if user.is_staff and user.is_superuser %}<th class="text-right">Acciones</th>{% else %} {% endif %}
+              </thead>
+            </tr>
+            {% for objects in modelos %}
+            <tr>
+              <td class="text-center" style="font-size:3em;">
+                {% if objects.activo == True %}
+                  <i style="color:#10cfbd;" class="fas fa-check"></i>
+                  <br><span style="color:transparent;">Activo</span>
+                {%else%}
+                  <i style="color:#cf0f0f;" class="fas fa-times"></i>
+                  <br><span style="color:transparent;">Inactivo</span>
+                {%endif%}
+              </td>
+              <td class="text-center">{{ objects.nombre }}</td>
+              <td class="text-center">{{ objects.descripcion }}</td>
+              <td class="text-center">{% if objects.imagen %}<img src="{{ objects.imagen.url }}"  width="150"/>{% endif %}</td>
+              <td class="text-center">{{ objects.perfil }}</td>
+              {% if user.is_superuser and user.is_staff %}
+              <td class="text-right">
+                <a href="{% url "productos:detail_modelo" objects.id %}">
+                  <button type="submit" class="btn btn-info">
+                    <i class="far fa-eye"></i>
+                  </button>
+                </a>
+                <a href="{% url "productos:edit_modelo" objects.id %}">
+      						<button type="submit" class="btn btn-warning"><i class="fas fa-pencil-alt" style="color:black;"></i></button>
+      					</a>
+                <a href="{% url "productos:delete_modelo" objects.id %}">
+                  <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-eraser"></i>
+                  </button>
+                </a>
+                {% elif user.is_staff %}
+                <td class="text-right">
+                  <a href="{% url "productos:detail_modelo" objects.id %}">
+                    <button type="submit" class="btn btn-info">
+                      <i class="far fa-eye"></i>
+                    </button>
+                  </a>
+                  <a href="{% url "productos:edit_modelo" objects.id %}">
+        						<button type="submit" class="btn btn-warning"><i class="fas fa-pencil-alt" style="color:black;"></i></button>
+        					</a>
+                {%else%}
+                {% endif %}
+            </tr>
+            {% endfor %}
+          </table>
+				</div>
+			</div>
+		</div>
+	</section>
+<!-- END PLACE PAGE CONTENT HERE -->
+</div>
+<!-- END CONTAINER FLUID -->
+</div>
+<!-- END PAGE CONTENT -->
+<script type="text/javascript">
+  $("#money").maskMoney({ formatOnBlur: true, reverse: true, prefix: '$' });
+</script>
+
+
+{% endblock %}

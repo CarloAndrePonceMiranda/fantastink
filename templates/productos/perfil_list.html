@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block head_title %}| Lista{% endblock %}
+{% block content %}
+{% url 'productos:perfil' as perfil %}
+{% url 'productos:modelo' as modelo %}
+<script type="text/javascript">
+(function(document) {
+  'use strict';
+
+  var LightTableFilter = (function(Arr) {
+
+    var _input;
+
+    function _onInputEvent(e) {
+      _input = e.target;
+      var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+      Arr.forEach.call(tables, function(table) {
+        Arr.forEach.call(table.tBodies, function(tbody) {
+          Arr.forEach.call(tbody.rows, _filter);
+        });
+      });
+    }
+
+    function _filter(row) {
+      var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+      row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+    }
+
+    return {
+      init: function() {
+        var inputs = document.getElementsByClassName('light-table-filter');
+        Arr.forEach.call(inputs, function(input) {
+          input.oninput = _onInputEvent;
+        });
+      }
+    };
+  })(Array.prototype);
+
+  document.addEventListener('readystatechange', function() {
+    if (document.readyState === 'complete') {
+      LightTableFilter.init();
+    }
+  });
+
+})(document);
+</script>
+<!-- START PAGE CONTENT -->
+<div class="content">
+  <!-- START JUMBOTRON -->
+  <div class="jumbotron" data-pages="parallax">
+    <div class=" container-fluid container-fixed-lg sm-p-l-0 sm-p-r-0">
+      <div class="inner">
+        <!-- START BREADCRUMB -->
+         <ol class="breadcrumb">
+           <li class="breadcrumb-item"><a href="#">Marcos</a></li>
+           <li class="breadcrumb-item"><a href="#">Perfil</a></li>
+           <li class="breadcrumb-item active">Lista de Perfiles</li>
+         </ol>
+        <!-- END BREADCRUMB -->
+      </div>
+    </div>
+  </div>
+  <!-- END JUMBOTRON -->
+  <!-- START CONTAINER FLUID -->
+  <div class="container-fluid container-fixed-lg">
+    <!-- BEGIN PlACE PAGE CONTENT HERE -->
+<section class="section">
+  <div class="container">
+    <div class="row separatedv">
+      <div class="col-lg-12 text-center">
+        <div class="row">
+          <div class="col-md-3 text-left" id="buscar">
+            <div class="form-group">
+              <input id="search" type="search" class="light-table-filter" data-table="table" placeholder="Buscar">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Agregar Perfil al Perfil -->
+            <a class="" href="{{perfil}}">
+              <button type="button" name="button" class="btn btn-success">
+                <i class="fas fa-plus"></i> Perfil
+              </button>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-dark table-hover">
+              <tr>
+                <thead>
+                  <th class="text-center">¿Activo?</th>
+                  <th class="text-center">ID</th>
+                  <th class="text-center">Perfil</th>
+                  <th class="text-center">Precio</th>
+                  {% if object.imagen %}<td class="text-center">Miniatura</td>{% endif %}
+                  {% if user.is_staff %}<th class="text-right">Acciones</th>{% else %} {% endif %}
+                </thead>
+              </tr>
+              {% for objects in queryset %}
+              <tr>
+                <td class="text-center w-10">
+                  {% if objects.activo == True %}
+                    <i style="color:#10cfbd;" class="fas fa-check"></i>
+                    <br><span style="color:transparent;">Activo</span>
+                  {%else%}
+                    <i style="color:#cf0f0f;" class="fas fa-times"></i>
+                    <br><span style="color:transparent;">Inactivo</span>
+                  {%endif%}
+                </td>
+                <td class="text-center w-10">{{ objects.id }}</td>
+                <td class="text-center w-30">{{ objects.perfil }} de {{ objects.material }}</td>
+                <td class="text-center w-10">${{ objects.precio }}</td>
+                {% if object.imagen %}<td class="w-30"><img src="{{ object.imagen.url }}" /></td>{% endif %}
+                {% if user.is_superuser and user.is_staff %}
+                <td class="text-right w-20">
+                  <!-- Agregar Modelo al Perfil -->
+                  <a class="" href="{{modelo}}">
+                    <button type="button" name="button" class="btn btn-success">
+                      <i class="fas fa-plus"></i> Modelo
+                    </button>
+                  </a>
+                  <!-- Detalle del Perfil -->
+                  <a href="{% url 'productos:detail_perfil' objects.pk %}">
+                    <button type="submit" class="btn btn-info">
+                      <i class="far fa-eye"></i>
+                    </button>
+                  </a>
+                  <!-- Editar Perfil -->
+                  <a href="{% url "productos:edit_perfil" objects.id %}">
+        						<button type="submit" class="btn btn-warning">
+                      <i class="fas fa-pencil-alt" style="color:black;"></i>
+                    </button>
+        					</a>
+                  <!-- Eliminar Perfil -->
+                  <a href="{% url "productos:delete_perfil" objects.id %}">
+                    <button type="submit" class="btn btn-danger">
+                      <i class="fas fa-eraser"></i>
+                    </button>
+                  </a>
+                  {% elif user.is_staff %}
+                  <td class="text-right">
+                    <!-- Detalle del Perfil -->
+                    <a href="{% url 'productos:detail_perfil' objects.pk %}">
+                      <button type="submit" class="btn btn-info">
+                        <i class="far fa-eye"></i>
+                      </button>
+                    </a>
+                    <!-- Editar Perfil -->
+                    <a href="{% url "productos:edit_perfil" objects.id %}">
+          						<button type="submit" class="btn btn-warning"><i class="fas fa-pencil-alt" style="color:black;"></i></button>
+          					</a>
+                  {%else%}
+                  {% endif %}
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+    </div>
+  </div>
+</section>
+<!-- END PLACE PAGE CONTENT HERE -->
+</div>
+<!-- END CONTAINER FLUID -->
+</div>
+<!-- END PAGE CONTENT -->
+
+{% endblock %}
